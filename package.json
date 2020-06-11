@@ -1,0 +1,24 @@
+{
+  "name": "Discord-Beomgolae",
+  "version": "1.0.0",
+  "description": "Discord Bot for music and emoctions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hsmint/Discord-Beomgolae.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hsmint/Discord-Beomgolae/issues"
+  },
+  "homepage": "https://github.com/hsmint/Discord-Beomgolae#readme",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "eslint": "^7.2.0"
+  }
+}
