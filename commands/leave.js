@@ -11,7 +11,8 @@ module.exports = {
     if (!queue) return msg.reply("I am not in voice channel");
     
     // Leaving channel
+    msg.client.queue.delete(msg.guild.id);
     await msg.member.voice.channel.leave();
-    msg.channel.send(`Leaving channel ${msg.voice.channel.name}`);
+    msg.channel.send(`Leaving channel **${msg.member.voice.channel.name}**`);
   }
 }

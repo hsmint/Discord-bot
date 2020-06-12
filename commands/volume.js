@@ -11,7 +11,7 @@ module.exports = {
     if (!queue) return msg.reply("I need to join in voice channel first");
 
     // No songs are playing in voice channel
-    if (queue.status === "stopped") return msg.channel.send("There is no songs playing");
+    if (!queue.status) return msg.channel.send("There is no songs playing");
 
     // Wants to know the volume
     if (!args[0]) return msg.channel.send(`Current volume **${queue.volume}**`);

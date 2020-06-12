@@ -11,10 +11,9 @@ module.exports = {
     if (!queue) return msg.reply("I am not in voice channel");
 
     // Bot status set as stopped
-    if (queue.status === "stopped") return msg.channel.send("I am not playing anything");
+    if (!queue.status) return msg.channel.send("I am not playing anything");
 
     // Bot status set as paused
-    queue.status = "playing";
     queue.connection.dispatcher.resume();
     msg.channel.send(`Resuming **${queue.songs[0].title}**`);
   }

@@ -11,10 +11,9 @@ module.exports = {
     if (!queue) return msg.reply("I am not in voice channel");
 
     // Currently not playing
-    if (queue.status === "stopped") return msg.channel.send("I am not playing anything");
+    if (!queue.status) return msg.channel.send("I am not playing anything");
 
     // Playing a song
-    queue.status = "paused";
     queue.connection.dispatcher.pause();
     msg.channel.send("Paused music");
   }
