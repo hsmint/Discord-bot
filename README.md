@@ -1,2 +1,4 @@
-# Discord-Beomgolae
-Discord Bot for music and emoctions
+# Discord-bbumwhale
+
+> Discord Bot for music and emoticons
+> Purpose for learning Javascript
