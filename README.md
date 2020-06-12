@@ -1,4 +1,5 @@
 # Discord-bbumwhale
 
-> Discord Bot for music and emoticons
-> Purpose for learning Javascript
+> This repository is for learning Javascript
+
+* Discord Bot for music and emoticons
