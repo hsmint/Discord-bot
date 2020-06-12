@@ -1,6 +1,6 @@
 module.exports = {
-  name: "pause",
-  description: "Information about connection on Bot status",
+  name: "skip",
+  description: "Skip to next song",
   execute(msg) {
     const queue = msg.client.queue.get(msg.guild.id);
     
@@ -13,14 +13,11 @@ module.exports = {
     // Currently not playing
     if (!queue.status) return msg.channel.send("I am not playing anything");
 
-    // Playing a song
-    if (!queue.pause){
-      queue.connection.dispatcher.pause();
-      queue.pause = true;
-      const embed = msg.client.msgEmbed;
-      embed.title = "Pause";
-      embed.description = `Paused **${queue.songs[0].title}**`;
-      msg.channel.send({embed: embed});
-    }
+    // Skipping song
+    const embed = msg.client.msgEmbed;
+    embed.title = "Skip";
+    embed.description = `Skipping **${queue.songs[0].title}**`;
+    queue.connection.dispatcher.end();
+    msg.channel.send({embed: embed});
   }
 }

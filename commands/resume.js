@@ -14,7 +14,13 @@ module.exports = {
     if (!queue.status) return msg.channel.send("I am not playing anything");
 
     // Bot status set as paused
-    queue.connection.dispatcher.resume();
-    msg.channel.send(`Resuming **${queue.songs[0].title}**`);
+    if (queue.pause){
+      queue.connection.dispatcher.resume();
+      queue.pause = false;
+      const embed = msg.client.msgEmbed;
+      embed.title = "Resume";
+      embed.description = `Resuming ${queue.songs[0].title}`;
+      msg.channel.send({embed: embed});
+    }
   }
 }

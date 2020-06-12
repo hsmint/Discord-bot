@@ -1,22 +1,22 @@
 {
-  "name": "Discord-Beomgolae",
+  "name": "Discord-bbumwhale",
   "version": "1.0.0",
-  "description": "Discord Bot for music and emoctions",
+  "description": "Discord Bot for music and emoticons",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hsmint/Discord-Beomgolae.git"
+    "url": "git+https://github.com/hsmint/Discord-bbumwhale.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hsmint/Discord-Beomgolae/issues"
+    "url": "https://github.com/hsmint/Discord-bbumwhale/issues"
   },
-  "homepage": "https://github.com/hsmint/Discord-Beomgolae#readme",
+  "homepage": "https://github.com/hsmint/Discord-bbumwhale#readme",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "discord-youtube-api": "^0.1.0",

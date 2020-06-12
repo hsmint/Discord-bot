@@ -3,7 +3,9 @@ module.exports = {
   description: "Information about connection on Bot status",
   execute(msg, args) {
     const queue = msg.client.queue.get(msg.guild.id); // Getting info
-    
+    const embed = msg.client.msgEmbed;
+    embed.title = "Volume";
+
     // Client not in voice channel
     if (!msg.member.voice) return msg.reply("You need to join voice channel!");
     
@@ -14,12 +16,16 @@ module.exports = {
     if (!queue.status) return msg.channel.send("There is no songs playing");
 
     // Wants to know the volume
-    if (!args[0]) return msg.channel.send(`Current volume **${queue.volume}**`);
+    if (!args[0]) {
+      embed.description = `Current volume **${queue.volume}**`;
+      return msg.channel.send({embed: embed});
+    }
 
     // Change volume (0 ~ 10)
     if (args.length === 1 && (args[0] >= '0' && args[0] <= '10')) {
       const newVolume = args[0];
-      msg.channel.send(`Change volume **${queue.volume}** to **${newVolume}**`);
+      embed.description = `Change volume **${queue.volume}** to **${newVolume}**`;
+      msg.channel.send({embed: embed});
       queue.connection.dispatcher.setVolume(newVolume / 10);
       queue.volume = newVolume;
     }
