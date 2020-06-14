@@ -1,3 +1,5 @@
+const { msgSend } = require('../function/message');
+
 module.exports = {
   name: "resume",
   description: "Information about connection on Bot status",
@@ -17,10 +19,7 @@ module.exports = {
     if (queue.pause){
       queue.connection.dispatcher.resume();
       queue.pause = false;
-      const embed = msg.client.msgEmbed;
-      embed.title = "Resume";
-      embed.description = `Resuming ${queue.songs[0].title}`;
-      msg.channel.send({embed: embed});
+      msgSend(msg, 'Resume', `Resuming ${queue.songs[0].title}`);
     }
   }
 }

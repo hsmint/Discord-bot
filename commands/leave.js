@@ -1,3 +1,5 @@
+const { msgSend } = require('../function/message');
+
 module.exports = {
   name: "leave",
   description: "Leaving voice channel",
@@ -13,6 +15,6 @@ module.exports = {
     // Leaving channel
     msg.client.queue.delete(msg.guild.id);
     await msg.member.voice.channel.leave();
-    msg.channel.send(`Leaving channel **${msg.member.voice.channel.name}**`);
+    msgSend(msg, 'Leave', `Leaving channel **${msg.member.voice.channel.name}**`);
   }
 }

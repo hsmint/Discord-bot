@@ -1,10 +1,10 @@
+const { msgSend } = require('../function/message');
+
 module.exports = {
   name: "volume",
   description: "Information about connection on Bot status",
   execute(msg, args) {
     const queue = msg.client.queue.get(msg.guild.id); // Getting info
-    const embed = msg.client.msgEmbed;
-    embed.title = "Volume";
 
     // Client not in voice channel
     if (!msg.member.voice) return msg.reply("You need to join voice channel!");
@@ -17,17 +17,19 @@ module.exports = {
 
     // Wants to know the volume
     if (!args[0]) {
-      embed.description = `Current volume **${queue.volume}**`;
-      return msg.channel.send({embed: embed});
+      return msgSend(msg, 'Volume', `Current volume **${queue.volume}**`);
     }
 
     // Change volume (0 ~ 10)
-    if (args.length === 1 && (args[0] >= '0' && args[0] <= '10')) {
-      const newVolume = args[0];
-      embed.description = `Change volume **${queue.volume}** to **${newVolume}**`;
-      msg.channel.send({embed: embed});
-      queue.connection.dispatcher.setVolume(newVolume / 10);
-      queue.volume = newVolume;
+    if (args.length === 1) {
+      const newVolume = Number(args[0]);
+      if (newVolume >= 0 && newVolume <= 10){
+        msgSend(msg, 'Volume', `Change volume **${queue.volume}** to **${newVolume}**`);
+        queue.connection.dispatcher.setVolume(newVolume / 10);
+        queue.volume = newVolume;
+      } else {
+        msgSend(msg, 'Volume', 'Please send input 0 to 10');
+      }
     }
   }
 }

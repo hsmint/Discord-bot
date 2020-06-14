@@ -1,5 +1,6 @@
 const { play } = require('../function/stream');
 const { getSong } = require('../function/youtube');
+const { msgSend } = require('../function/message');
 
 module.exports = {
   name: "play",
@@ -8,8 +9,6 @@ module.exports = {
 
     const queue = msg.client.queue.get(msg.guild.id);
     const voiceChannel = msg.member.voice.channel;
-    const embed = msg.client.msgEmbed;
-    embed.title = "Play";
 
     // Client not in voice channel
     if (!voiceChannel) return msg.reply('You are not in voice channel');
@@ -17,20 +16,14 @@ module.exports = {
     // Playing by Queue
     if (args.length === 0) {
       // No song in queued
-      if (!queue) {
-        msg.description = "I am not in voice channel";
-        return msg.channel.send({embed: embed});
-      }
+      if (!queue) return msgSend(msg, 'Play', "I am not in voice channel");
+       
       // Stopped music because no queue
-      if (queue.songs.length === 0) {
-        msg.description = "There is no song playing";
-        return msg.channel.send({embed: embed});
-      }
+      if (queue.songs.length === 0) return msgSend(msg, 'Play', "There is no song playing");
 
-      if (queue.pause) {
-        msg.description = "The song is currently paused. Use resume command.";
-        return msg.channel.send({embed: embed});
-      }
+      if (queue.pause) return msgSend(msg, 'Play', "The song is currently paused. Use resume command.");
+
+
     }
 
     // Playing music
@@ -38,16 +31,22 @@ module.exports = {
 
       // Getting song info from youtube
       const songArray = await getSong(args[0]);
-      msg.description = `Playing ${songArray[0].title}`;
-      msg.channel.send({embed: embed});
+      
       // If setting up data is already done before
       if (queue) {
-        for (song in songArray) {
-          queue.songs.push(song);
+        for (let i = 0; i < songArray.length; i++) {
+          queue.songs.push(songArray[i]);
         }
         // There is no song playing
-        if (!queue.status) return play(msg);
-
+        if (!queue.status) {
+          msgSend(msg, 'Play', `Playing ${queue.songs[0].title}`);
+          try{
+            return play(msg);
+          } catch (error) {
+            queue.songs.shift();
+            return msgSend(msg, 'Play', 'Error Playing. Please try again.');
+          }
+        }
         // Playing song in voice channel
         else {
           for (let i = 0; i < songArray.length; i++) {
@@ -70,10 +69,12 @@ module.exports = {
       for (let i = 0; i < songArray.length; i++) {
         data.songs.push(songArray[i]);
       }
+      
       // Try to join voice channel
       try {
         const connection = await voiceChannel.join();
         data.connection = connection;
+        msgSend(msg ,'Play', `Playing ${data.songs[0].title}`)
         play(msg);
       } catch (error) {
         console.error(error);
