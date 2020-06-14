@@ -8,6 +8,8 @@ module.exports = {
 
     const queue = msg.client.queue.get(msg.guild.id);
     const voiceChannel = msg.member.voice.channel;
+    const embed = msg.client.msgEmbed;
+    embed.title = "Play";
 
     // Client not in voice channel
     if (!voiceChannel) return msg.reply('You are not in voice channel');
@@ -15,12 +17,20 @@ module.exports = {
     // Playing by Queue
     if (args.length === 0) {
       // No song in queued
-      if (!queue) return msg.reply("I am not in voice channel");
-
+      if (!queue) {
+        msg.description = "I am not in voice channel";
+        return msg.channel.send({embed: embed});
+      }
       // Stopped music because no queue
-      if (queue.songs.length === 0) return msg.reply("No songs in queue.");
+      if (queue.songs.length === 0) {
+        msg.description = "There is no song playing";
+        return msg.channel.send({embed: embed});
+      }
 
-      return play(msg);
+      if (queue.pause) {
+        msg.description = "The song is currently paused. Use resume command.";
+        return msg.channel.send({embed: embed});
+      }
     }
 
     // Playing music
@@ -28,7 +38,8 @@ module.exports = {
 
       // Getting song info from youtube
       const songArray = await getSong(args[0]);
-
+      msg.description = `Playing ${songArray[0].title}`;
+      msg.channel.send({embed: embed});
       // If setting up data is already done before
       if (queue) {
         for (song in songArray) {
@@ -49,10 +60,10 @@ module.exports = {
       // Constructing data
       const data = {
         connection: null,
-        volume: 5,
-        songs: [],
-        status: true,
-        pause: false,
+        volume: 5, // volume of bot
+        songs: [], // queue of songs
+        status: true, // playing music
+        pause: false, // paused music
       };
 
       msg.client.queue.set(msg.guild.id, data);
