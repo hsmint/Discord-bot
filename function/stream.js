@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const { msgSend } = require('../function/message');
+const { changeActivity } = require('../index');
 
 module.exports = {
   async play(msg) {
@@ -25,6 +26,7 @@ module.exports = {
             queue.songs = [];
             queue.status = false;
           } else module.exports.play(msg);
+          changeActivity(msg);
         })
         .on('error', error => console.log(error));
       dispatcher.setVolume(queue.volume / 10);

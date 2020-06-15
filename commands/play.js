@@ -6,7 +6,6 @@ module.exports = {
   name: "play",
   description: "Playing a song on voice channel",
   async execute(msg, args) {
-
     const queue = msg.client.queue.get(msg.guild.id);
     const voiceChannel = msg.member.voice.channel;
 
@@ -23,7 +22,7 @@ module.exports = {
 
       if (queue.pause) return msgSend(msg, 'Play', "The song is currently paused. Use resume command.");
 
-
+      return msgSend(msg, 'Play', `Currently playing ${queue.songs[0].title}`);
     }
 
     // Playing music
