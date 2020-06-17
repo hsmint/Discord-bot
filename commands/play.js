@@ -48,10 +48,7 @@ module.exports = {
         }
         // Playing song in voice channel
         else {
-          for (let i = 0; i < songArray.length; i++) {
-            queue.songs.push(songArray[i]);
-          }
-          return;
+          return msgSend(msg, 'Play', 'Added Song to queue');
         }
       }
 

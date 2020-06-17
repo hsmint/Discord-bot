@@ -21,12 +21,14 @@ module.exports = {
       const dispatcher = queue.connection.play(`./assets/song${msg.guild.id}.webm`)
         .on('finish', () => {
           queue.songs.shift();
+          changeActivity(msg);
           if (!queue.songs[0]) {
             dispatcher.end();
             queue.songs = [];
             queue.status = false;
-          } else module.exports.play(msg);
-          changeActivity(msg);
+          } else {
+            return module.exports.play(msg);
+          }
         })
         .on('error', error => console.log(error));
       dispatcher.setVolume(queue.volume / 10);

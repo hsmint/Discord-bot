@@ -13,7 +13,7 @@ module.exports = {
     msg.channel.send(embed);
   },
   msgEmbed(title, txt) {
-    const embed = {
+    let embed = {
       color: 0xB6EB7A,
       title: title,
       description: txt,
