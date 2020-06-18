@@ -59,6 +59,7 @@ module.exports = {
         songs: [], // queue of songs
         status: true, // playing music
         pause: false, // paused music
+        repeat: false,
       };
 
       msg.client.queue.set(msg.guild.id, data);

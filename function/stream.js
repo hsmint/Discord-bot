@@ -20,13 +20,15 @@ module.exports = {
     setTimeout(() => {
       const dispatcher = queue.connection.play(`./assets/song${msg.guild.id}.webm`)
         .on('finish', () => {
+          if (queue.repeat) queue.songs.push(queue.songs[0]);
           queue.songs.shift();
-          changeActivity(msg);
           if (!queue.songs[0]) {
             dispatcher.end();
             queue.songs = [];
             queue.status = false;
+            changeActivity(msg);
           } else {
+            changeActivity(msg);
             return module.exports.play(msg);
           }
         })
