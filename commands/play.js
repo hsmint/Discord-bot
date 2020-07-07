@@ -1,5 +1,5 @@
 const { play } = require('../function/stream');
-const { getInfo } = require('../function/youtube');
+const { getSong, getPlaylist } = require('../function/youtube');
 const { msgSend } = require('../function/message');
 
 module.exports = {
@@ -30,25 +30,30 @@ module.exports = {
       // Getting song info from youtube
       const url = args[0];
       const chk = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
+      const getList = url.split("list=");
       if (!chk.test(url)) return msgSend(msg, 'Play', 'Not valid URL');
 
       // If setting up data is already done before
       if (queue) {
-        await getInfo(msg, url);
+        if (getList.length === 1) await getSong(msg, url);
+        else await getPlaylist(msg, getList[1].substring(0, 34));
         // There is no song playing
-        if (!queue.status) {
-          msgSend(msg, 'Play', `Playing ${queue.songs[0].title}`);
-          try{
-            return play(msg);
-          } catch (error) {
-            queue.songs.shift();
-            return msgSend(msg, 'Play', 'Error Playing. Please try again.');
+        setTimeout(() => {
+          if (!queue.status) {
+            try{
+              play(msg);
+              msgSend(msg, 'Play', `Playing ${queue.songs[0].title}`);
+            } catch (error) {
+              queue.songs.shift();
+              msgSend(msg, 'Play', 'Error Playing. Please try again.');
+            }
           }
-        }
-        // Playing song in voice channel
-        else {
-          return msgSend(msg, 'Play', 'Added Song to queue');
-        }
+          // Playing song in voice channel
+          else {
+            msgSend(msg, 'Play', 'Added Song to queue');
+          }
+        }, 5000);
+        return;
       }
 
       // Constructing data
@@ -62,7 +67,8 @@ module.exports = {
       };
 
       msg.client.queue.set(msg.guild.id, data);
-      await getInfo(msg, url);
+      if (getList.length === 1) await getSong(msg, url);
+      else await getPlaylist(msg, getList[1].substring(0, 34));
       
       // Try to join voice channel
       try {
