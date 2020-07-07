@@ -1,5 +1,5 @@
 const { play } = require('../function/stream');
-const { getSong } = require('../function/youtube');
+const { getInfo } = require('../function/youtube');
 const { msgSend } = require('../function/message');
 
 module.exports = {
@@ -27,15 +27,14 @@ module.exports = {
 
     // Playing music
     if (args.length === 1) {
-
       // Getting song info from youtube
-      const songArray = await getSong(args[0]);
-      
+      const url = args[0];
+      const chk = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
+      if (!chk.test(url)) return msgSend(msg, 'Play', 'Not valid URL');
+
       // If setting up data is already done before
       if (queue) {
-        for (let i = 0; i < songArray.length; i++) {
-          queue.songs.push(songArray[i]);
-        }
+        await getInfo(msg, url);
         // There is no song playing
         if (!queue.status) {
           msgSend(msg, 'Play', `Playing ${queue.songs[0].title}`);
@@ -63,9 +62,7 @@ module.exports = {
       };
 
       msg.client.queue.set(msg.guild.id, data);
-      for (let i = 0; i < songArray.length; i++) {
-        data.songs.push(songArray[i]);
-      }
+      await getInfo(msg, url);
       
       // Try to join voice channel
       try {
