@@ -13,7 +13,7 @@ module.exports = {
     }
 
     let getList = url.split("list=");
-    if (getList.length === 0)
+    if (getList.length === 1)
       await getSong(msg, url);
     else {
       getList = getList[1].split('&');

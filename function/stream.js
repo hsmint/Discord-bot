@@ -8,11 +8,9 @@ module.exports = {
     const queue = msg.client.queue.get(msg.guild.id);
     queue.status = true;
     const song = queue.songs[0];
-    ytdl(song.url, {filter: 'audioonly', quality: 'highestaudio'})
+   ytdl(song.url, {filter: 'audioonly', quality: 'highestaudio'})
       .pipe(fs.createWriteStream(`./assets/song${msg.guild.id}.webm`))
-      .on('error', error => {
-        console.log(error);
-        console.log(song.url);
+      .on('error', () => {
         queue.songs.shift();
         msgSend(msg, 'Play', 'There is an error on url moving to next song');
         module.exports.play(msg);
