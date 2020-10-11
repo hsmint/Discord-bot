@@ -6,16 +6,19 @@ module.exports = {
   execute(msg) {
     const queue = msg.client.queue.get(msg.guild.id);
 
+    // Client not in voice channel
     if (!msg.member.voice) msg.reply("You are not in voice channel");
 
+    // Bot not in voice channel
     if (!queue) msg.reply("I am not in voice channel");
 
+    // Change repeat status
     if (!queue.repeat) {
       queue.repeat = true;
-      msgSend(msg, "Repeat", "Repeating the playlist");
+      msgSend(msg, "Repeat", "Enable repeating the playlist");
     } else {
       queue.repeat = false;
-      msgSend(msg, "Repeat", "No repeating the playlist.");
+      msgSend(msg, "Repeat", "Disable repeating the playlist.");
     }
   }
 }

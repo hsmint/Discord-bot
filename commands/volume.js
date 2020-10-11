@@ -24,9 +24,13 @@ module.exports = {
     if (args.length === 1) {
       const newVolume = Number(args[0]);
       if (newVolume >= 0 && newVolume <= 10){
-        msgSend(msg, 'Volume', `Change volume **${queue.volume}** to **${newVolume}**`);
-        queue.connection.dispatcher.setVolume(newVolume / 10);
-        queue.volume = newVolume;
+        try {
+          queue.volume = newVolume;
+          queue.connection.dispatcher.setVolume(newVolume / 10);
+          msgSend(msg, 'Volume', `Change volume **${queue.volume}** to **${newVolume}**`);
+        } catch (error) {
+          msgSend(msg, 'Volume', 'Not playing any song');
+        }
       } else {
         msgSend(msg, 'Volume', 'Please send input 0 to 10');
       }
