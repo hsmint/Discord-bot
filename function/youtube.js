@@ -13,9 +13,11 @@ module.exports = {
     }
 
     let getList = url.split("list=");
-    if (getList.length === 1)
-      await getSong(msg, url);
-    else {
+    if (getList.length === 1) {
+      getList = getList[0].split('&');
+      getList = getList[0].split('v=')
+      await getSong(msg, getList[1]);
+    } else {
       getList = getList[1].split('&');
       getList = getList[0].split('/');
       await getPlaylist(msg, getList[0]);
@@ -24,14 +26,25 @@ module.exports = {
   }
 }
 
-async function getSong(msg, url) {
+async function getSong(msg, videoId) {
   const queue = msg.client.queue.get(msg.guild.id);
-  const songInfo = await ytdl.getInfo(url);
-  const song = {
-    title: songInfo.title,
-    url: songInfo.video_url,
-  };
-  queue.songs.push(song);
+  let option = {
+    uri: 'https://www.googleapis.com/youtube/v3/videos',
+    qs: {
+      part: 'snippet',
+      id: videoId,
+      key: api,
+    }
+  }
+  await request.get(option, function(error, response, body) {
+    const obj = JSON.parse(body);
+    const title = obj.items[0].snippet.title;
+    const song = {
+      title: title,
+      url: 'https://www.youtube.com/watch?v=' + videoId
+    };
+    queue.songs.push(song);
+  });
 }
 
 async function getPlaylist(msg, listId) {
@@ -62,3 +75,4 @@ async function getPlaylist(msg, listId) {
     });
   } while(next !== undefined);
 }
+// https://www.youtube.com/watch?v=q8lYrRzgYD4&ab_channel=1theK%28%EC%9B%90%EB%8D%94%EC%BC%80%EC%9D%B4%29
