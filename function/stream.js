@@ -24,7 +24,7 @@ module.exports = {
           return module.exports.play(msg)
         }
       })
-      .on("error", (error) => {
+      .catch(error => {
         console.log(error)
         msgSend(msg, 'Error', 'Unavailable video')
         queue.songs.shift();

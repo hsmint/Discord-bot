@@ -1,4 +1,3 @@
-const ytdl = require('ytdl-core');
 const { api } = require('../config.json');
 const request = require('request-promise-native');
 const { msgSend } = require('../function/message');
