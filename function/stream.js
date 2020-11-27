@@ -9,9 +9,8 @@ module.exports = {
     queue.status = true
     const song = queue.songs[0]
     try {
-      ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio' })
-      .pipe(fs.createWriteStream(`./assets/song${msg.guild.id}.webm`))
-      .catch(error => {
+      await ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio' }).pipe(fs.createWriteStream(`./assets/song${msg.guild.id}.webm`))
+      .on('error', (error) => {
         console.log(error)
         msgSend(msg, 'Error', 'Unavailable video')
         queue.songs.shift();
