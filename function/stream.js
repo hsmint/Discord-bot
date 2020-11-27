@@ -9,11 +9,12 @@ module.exports = {
     queue.status = true
     const song = queue.songs[0]
     try {
-      ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio' }).pipe(fs.createWriteStream(`./assets/song${msg.guild.id}.webm`))
-      const dispatcher = queue.connection.play(`./assets/song${msg.guild.id}.webm`)
-      .on('finish', () => {
-        if (queue.repeat) queue.songs.push(queue.songs[0])
-        queue.songs.shift()
+      ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio' })
+      .pipe(fs.createWriteStream(`./assets/song${msg.guild.id}.webm`))
+      .catch(error => {
+        console.log(error)
+        msgSend(msg, 'Error', 'Unavailable video')
+        queue.songs.shift();
         if (!queue.songs[0]) {
           dispatcher.end()
           queue.songs = []
@@ -24,10 +25,10 @@ module.exports = {
           return module.exports.play(msg)
         }
       })
-      .catch(error => {
-        console.log(error)
-        msgSend(msg, 'Error', 'Unavailable video')
-        queue.songs.shift();
+      const dispatcher = queue.connection.play(`./assets/song${msg.guild.id}.webm`)
+      .on('finish', () => {
+        if (queue.repeat) queue.songs.push(queue.songs[0])
+        queue.songs.shift()
         if (!queue.songs[0]) {
           dispatcher.end()
           queue.songs = []
