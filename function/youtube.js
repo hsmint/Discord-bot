@@ -36,15 +36,19 @@ async function getSong(msg, videoId) {
       key: api,
     }
   }
-  await request.get(option, function(error, response, body) {
-    const obj = JSON.parse(body);
-    const title = obj.items[0].snippet.title;
-    const song = {
-      title: title,
-      url: 'https://www.youtube.com/watch?v=' + videoId
-    };
-    queue.songs.push(song);
-  });
+  try {
+    await request.get(option, function(error, response, body) {
+      const obj = JSON.parse(body);
+      const title = obj.items[0].snippet.title;
+      const song = {
+        title: title,
+        url: 'https://www.youtube.com/watch?v=' + videoId
+      };
+      queue.songs.push(song);
+    });
+  } catch(error) {
+    console.log(error)
+  }
 }
 
 async function getPlaylist(msg, listId) {
@@ -60,19 +64,23 @@ async function getPlaylist(msg, listId) {
       pageToken: undefined,
     }
   }
-  do {
-    await request.get(option, function(error, response, body) {
-      const obj = JSON.parse(body);
-      option.qs.pageToken = next = obj.nextPageToken;
-      for (i in obj.items) {
-        const item = obj.items[i].snippet
-        const song = {
-          title: item.title,
-          url: 'https://www.youtube.com/watch?v=' + item.resourceId.videoId
+  try {
+    do {
+      await request.get(option, function(error, response, body) {
+        const obj = JSON.parse(body);
+        option.qs.pageToken = next = obj.nextPageToken;
+        for (i in obj.items) {
+          const item = obj.items[i].snippet
+          const song = {
+            title: item.title,
+            url: 'https://www.youtube.com/watch?v=' + item.resourceId.videoId
+          }
+          queue.songs.push(song);
         }
-        queue.songs.push(song);
-      }
-    });
-  } while(next !== undefined);
+      });
+    } while(next !== undefined);
+  } catch(error) {
+    console.log(error)
+  }
 }
 // https://www.youtube.com/watch?v=q8lYrRzgYD4&ab_channel=1theK%28%EC%9B%90%EB%8D%94%EC%BC%80%EC%9D%B4%29
