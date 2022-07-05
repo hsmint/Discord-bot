@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/hsmint/Discord-bbumwhale#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
+    "@discordjs/opus": "^0.8.0",
     "discord-youtube-api": "^0.1.0",
     "discord.js": "^12.4.1",
     "eslint": "^7.12.1",
