@@ -2,21 +2,32 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { Player } = require('discord-player');
-const { token } = require('./config.json');
+const { getPlayerSetting, getBotSetting } = require('./utils/config.js');
 
 client = new Client({ intents: [
-	GatewayIntentBits.Guilds,
+	GatewayIntentBits.Guilds, 
 	GatewayIntentBits.GuildVoiceStates
 ] });
 
 global.player = new Player(client, {
 		ytdlOptions: {
 			quality: 'highestaudio',
-			highWaterMark: 1 << 25
+			highWaterMark: 1 << 25,
 		}
 	})
-	.on('botDisconnect', (queue) => queue.metadata.channel.send(`I got disconnected...`))
-	.on('trackEnd', (queue, track) => queue.metadata.channel.send(`Track Ended`))
+	.on('botDisconnect', (queue) => queue.metadata.channel.send(`👋 | Bye!`))
+	.on('trackEnd', (queue, track) => {
+		queue.metadata.channel.send(`Music **${track.title}** ended!`);
+		const volume = getPlayerSetting('volume');
+		queue.setVolume(volume);
+		
+		if (queue.tracks.length != 0) {
+			queue.play(queue.tracks.at(0));
+			return queue.metadata.channel.send(`Play next track **${queue.tracks.at(0)}**`)
+		} else {
+			return queue.metadata.channel.send('All the track plays are finished!');
+		}
+	})
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -31,7 +42,9 @@ for (const file of commandFiles) {
 client.once('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 });
-
+	/**
+     * @param {Interaction} interaction
+     */
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
@@ -46,4 +59,5 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
+const token = getBotSetting('token');
 client.login(token);
