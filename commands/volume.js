@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { updatePlayerSetting } = require('../utils/config.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,15 +11,21 @@ module.exports = {
                 .setMinValue(1)
                 .setMaxValue(100)
                 .setRequired(true)),
-        
-            
+                
+    /**
+     * @param {Interaction} interaction
+     */
 	async execute(interaction) {
         const queue = player.getQueue(interaction.guildId);
-
         if (!queue) return interaction.reply({ content: `${interaction.member} Music is not playing at this moment`, ephemeral: true});
 
         const vol = interaction.options.getInteger('volume');
         queue.setVolume(vol);
-        return interaction.reply(`Changed volume to **${vol}**`)
+        updatePlayerSetting("volume", vol);
+        if (vol > 50) {
+            return interaction.reply(`🔊 | Changed volume to **${vol}**`);
+        } else {
+            return interaction.reply(`🔉 | Changed volume to **${vol}**`);
+        }
     }
 };
