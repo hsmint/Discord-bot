@@ -16,11 +16,13 @@ global.player = new Player(client, {
 		}
 	})
 	.on('botDisconnect', (queue) => queue.metadata.channel.send(`👋 | Bye!`))
-	.on('trackEnd', (queue, track) => {
-		queue.metadata.channel.send(`Music **${track.title}** ended!`);
+	.on('trackStart', (queue, track) => {
 		const volume = getPlayerSetting('volume');
 		queue.setVolume(volume);
-		
+	})
+	.on('trackEnd', (queue, track) =>  {
+		queue.metadata.channel.send(`Music **${track.title}** ended!`);
+
 		if (queue.tracks.length != 0) {
 			queue.play(queue.tracks.at(0));
 			return queue.metadata.channel.send(`Play next track **${queue.tracks.at(0)}**`)
