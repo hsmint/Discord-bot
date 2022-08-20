@@ -2,7 +2,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { Player } = require('discord-player');
-const { getPlayerSetting, getBotSetting } = require('./utils/config.js');
+const { token } = require('./config/bot.json');
+const { setting } = require('./utils/config.js')
 
 client = new Client({ intents: [
 	GatewayIntentBits.Guilds, 
@@ -16,10 +17,6 @@ global.player = new Player(client, {
 		}
 	})
 	.on('botDisconnect', (queue) => queue.metadata.channel.send(`👋 | Bye!`))
-	.on('trackStart', (queue, track) => {
-		const volume = getPlayerSetting('volume');
-		queue.setVolume(volume);
-	})
 	.on('trackEnd', (queue, track) =>  {
 		queue.metadata.channel.send(`Music **${track.title}** ended!`);
 
@@ -30,6 +27,7 @@ global.player = new Player(client, {
 			return queue.metadata.channel.send('All the track plays are finished!');
 		}
 	})
+player.setting = setting
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -61,5 +59,4 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
-const token = getBotSetting('token');
 client.login(token);

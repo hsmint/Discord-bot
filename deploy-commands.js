@@ -2,11 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
-const { getBotSetting } = require('./utils/config.js');
-
-const clientId = getBotSetting('clientId');
-const guildId = getBotSetting('guildId');
-const token = getBotSetting('token');
+const { clientId, guildId, token } = require('./config/bot.json');
 
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
