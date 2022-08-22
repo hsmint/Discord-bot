@@ -12,8 +12,8 @@ module.exports = {
      * @param {Interaction} interaction
      */
 	async execute(interaction) {
-		if (!interaction.member.voice.channelId) return await interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
-		if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) return await interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
+		await player.isVoiceChannel(interaction);
+		
 		const url = interaction.options.getString('url');
 		let queue = player.getQueue(interaction.guild);
 		if (!queue) {
@@ -27,11 +27,7 @@ module.exports = {
 				volumeSmoothness: 0.0
 			});
 		}
-		try {
-            if (!queue.connection) await queue.connect(interaction.member.voice.channel);
-        } catch {
-            return await interaction.reply({ content: `I can't join the voice channel ${interaction.member}... try again ? ❌`, ephemeral: true});
-        }
+		await player.joinVoiceChannel(interaction);
 		await interaction.deferReply();
 		const tracks = await player.search(url, {
             requestedBy: interaction.user

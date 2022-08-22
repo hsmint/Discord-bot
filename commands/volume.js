@@ -15,11 +15,7 @@ module.exports = {
      * @param {Interaction} interaction
      */
 	async execute(interaction) {
-        const queue = player.getQueue(interaction.guildId);
-        if (!queue) return interaction.reply({ content: `${interaction.member} Music is not playing at this moment`, ephemeral: true});
-
-        const vol = player.settings.volume = interaction.options.getInteger('volume');
-        queue.setVolume(vol);
-        return interaction.reply(`🔉 | Changed volume to **${vol}**`);
+        player.setVolume(interaction);
+        return interaction.reply(`🔉 | Changed volume **${player.getVolume()}**`);
     }
 };

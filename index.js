@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { Player } = require('discord-player');
+const { Music } = require('./player/music.js');
 const { token } = require('./config/bot.json');
 const { setting } = require('./utils/config.js')
 
@@ -10,7 +10,7 @@ client = new Client({ intents: [
 	GatewayIntentBits.GuildVoiceStates
 ] });
 
-global.player = new Player(client, {
+global.player = new Music(client, {
 		ytdlOptions: {
 			quality: 'highestaudio',
 			highWaterMark: 1 << 25,
