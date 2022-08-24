@@ -13,20 +13,8 @@ module.exports = {
      */
 	async execute(interaction) {
 		await player.isVoiceChannel(interaction);
-		
 		const url = interaction.options.getString('url');
-		let queue = player.getQueue(interaction.guild);
-		if (!queue) {
-			queue = await player.createQueue(interaction.guild, {
-				initialVolume: player.setting.volume,
-				leaveOnStop: false,
-				leaveOnEnd: false,
-				metadata: {
-					channel: interaction.channel
-				},
-				volumeSmoothness: 0.0
-			});
-		}
+		const queue = await player.getQueue(interaction);
 		await player.joinVoiceChannel(interaction);
 		await interaction.deferReply();
 		const tracks = await player.search(url, {

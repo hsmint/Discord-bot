@@ -3,7 +3,6 @@ const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { Music } = require('./player/music.js');
 const { token } = require('./config/bot.json');
-const { setting } = require('./utils/config.js')
 
 client = new Client({ intents: [
 	GatewayIntentBits.Guilds, 
@@ -27,7 +26,6 @@ global.player = new Music(client, {
 			return queue.metadata.channel.send('All the track plays are finished!');
 		}
 	})
-player.setting = setting
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
