@@ -14,7 +14,7 @@ module.exports = {
 	async execute(interaction) {
 		await player.isVoiceChannel(interaction);
 		const url = interaction.options.getString('url');
-		const queue = await player.getQueue(interaction);
+		const queue = await player.getQueue(interaction.guild, interaction);
 		await player.joinVoiceChannel(interaction);
 		await interaction.deferReply();
 		const tracks = await player.search(url, {

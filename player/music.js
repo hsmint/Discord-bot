@@ -1,5 +1,4 @@
 const { Player } = require('discord-player');
-const queue = require('../commands/queue');
 
 class Music extends Player {
     constructor(client, options = {}) { 
@@ -22,9 +21,9 @@ class Music extends Player {
         return this.setting.volume;
     }
 
-    getQueue(interaction) {
-        let guild = this.client.guilds.resolve(interaction.guildId);
-        const queue = this.queues.has(interaction.guildId)  ? this.queues.get(interaction.guildId) : this.createQueue(interaction.guild, {
+    getQueue(guild, interaction = {}) {
+        guild = this.client.guilds.resolve(guild);
+        const queue = this.queues.has(guild.id)  ? this.queues.get(guild.id) : this.createQueue(guild, {
             initialVolume: this.setting.volume,
             leaveOnStop: false,
             leaveOnEnd: false,
@@ -44,7 +43,7 @@ class Music extends Player {
     }
 
     async joinVoiceChannel(interaction) {
-        const queue = this.getQueue(interaction.guildId);
+        const queue = this.getQueue(interaction.guild);
         try {
             if (!queue.connection) await queue.connect(interaction.member.voice.channel);
         } catch {
